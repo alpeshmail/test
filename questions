@@ -1,0 +1,26 @@
+1)	What is base64 encoding?
+The term Base64 refers to a specific MIME content transfer encoding.
+Basically base64 encoding used when it required to encoding the data that needs to be stored and transferred across a network. When data is transferred over media you never know it might be interpreted and screwed up from underlying protocol. Base64 will ensure that the data remains intact without modification during the transport. 
+The disadvantage of encoding message it increases its length --- every 3 bytes of data is encoded to 4 ASCII characters.
+To send text reliably first encode to bytes using a text encoding of your choice(example UTF-8) and then afterwards Base64 encode the resulting binary data into a text string that is safe to send encode as ASCII. Receiver knows which encoding was used. The receiver will have to reverse this process to recover the original message.
+Base64 can be used in a variety of contexts:
+•           Evolution and Thunderbird use Base64 to obfuscate e-mail passwords[1]
+•           Base64 can be used to transmit and store text that might otherwise cause delimiter collision
+•           Base64 is often used as a quick but insecure shortcut to obscure secrets without incurring the overhead of cryptographic key management
+•           Spammers use Base64 to evade basic anti-spamming tools, which often do not decode Base64 and therefore cannot detect keywords in encoded messages.
+•           Base64 is used to encode character strings in LDIF files
+•           Base64 is sometimes used to embed binary data in an XML file, using a syntax similar to ...... e.g. Firefox's bookmarks.html.
+•           Base64 is also used when communicating with government Fiscal Signature printing devices (usually, over serial or parallel ports) to minimize the delay when transferring receipt characters for signing.
+•           Base64 is used to encode binary files such as images within scripts, to avoid depending on external files.
+•           Can be used to embed raw image data into a CSS property such as background-image.
+
+
+2)	What are your options if you want your SPA to get data from a different domain?
+For security reason most of browsers not allowed to call Ajax request on different domain. To do that we have to allow a cross domain request. Following two way we can do the cross domain request.
+i.	JSON-P
+JSON-P stands for JSON with Padding and it by passed the cross –domain policies in web browsers. A JSONP call is the dynamic construction of such a script tag, passing URL parameters to the required resources, which then responds with a JSON of the requested resource. It has built-in support in jQuery $.ajax method. The biggest problem however, since it is done using a <script> tag it is limited to GET request only.
+ii.	CORS :
+CORS stands for Cross-Origin-Resource-Sharing and it is designed to make it possible to access the restful service outside of the current domain. It is only supported in recent browsers like Chrome, IE and Firefox (No supported at all in IE7). It does solved the current limitation of JSONP by allowing POST requests, it could even directly uploaded files directly to S3 without going through your servers.
+In Angular we have to enable cross domain using set the $httpProvider.defaults.useXDomain = true; that means the AJAX request send with X-Requested-With and Removing the necessary header, so the server is not rejecting the all incoming request. We can restrict to allow only certain domain using the “Access-Control-Allow-Origin” header.
+3)	How does angular detect changes in the model?
+Angular $digest cycle is the critical entity to make application faster and, the faster the two-way data binding. Java script is single thread of executing means $digest cycle is fully dirty-checked. $digest cycles run from internal Angular events (yes and $scope.$apply()) built into their directives, such as ng-Click, ng-Change and so on. When something is triggers it internally trigger to ng-Model bound to it. Angular will run the $diggest loop to see if anything has changes. If something has changed, angular will update the bounded model. If something is changes, angular will run the $diggest again to update the view. Basically is a “dirty-Check”. Larger $digest loops will take longer to complete, which means the user could see some lag whilst using the application. Understanding the performance impacts upfront can help you build better applications.
